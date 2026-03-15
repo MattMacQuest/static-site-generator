@@ -29,12 +29,18 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
         new_nodes.extend(holder)
     return new_nodes
 
-def extract_markdown_images(text):
+def extract_markdown_images(text: str) -> tuple:
     # Image syntax: ![alt text](URL)
     pattern = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
     return re.findall(pattern, text)
     
-def extract_markdown_links(text):
+def extract_markdown_links(text: str) -> tuple:
     # Link syntax: [link text](URL)
     pattern = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
     return re.findall(pattern, text)
+
+def split_nodes_images(old_nodes: list[TextNode]) -> list[TextNode]:
+    pass
+
+def split_nodes_links(old_nodes) -> list[TextNode]:
+    pass
