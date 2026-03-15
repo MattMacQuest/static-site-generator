@@ -1,4 +1,5 @@
 from textnode import TextNode, TextType
+import re
 
 # TODO: Integrate nested markdown for things like combo **__bold italics__**
 def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: TextType) -> list[TextNode]:
@@ -27,3 +28,13 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
                 holder.append(TextNode(split_node_text[i], TextType.TEXT))
         new_nodes.extend(holder)
     return new_nodes
+
+def extract_markdown_images(text):
+    # Image syntax: ![alt text](URL)
+    pattern = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
+    return re.findall(pattern, text)
+    
+def extract_markdown_links(text):
+    # Link syntax: [link text](URL)
+    pattern = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
+    return re.findall(pattern, text)
