@@ -1,3 +1,5 @@
+from __future__ import annotations
+from htmlnode import LeafNode
 from enum import Enum
 
 class TextType(Enum):
@@ -9,25 +11,40 @@ class TextType(Enum):
     IMAGE = "image"
     
 class TextNode():
-    def __init__(self, text, text_type, url=None):
+    def __init__(self, text: str, text_type: TextType, url=None):
         self.text = text
         self.text_type = text_type
         self.url = url
         
-    def __eq__(self, other):
+    def __eq__(self, other: TextNode) -> bool:
         return (
             self.text_type == other.text_type
             and self.text == other.text
             and self.url == other.url
         )
         
-    def __ne__(self, other):
+    def __ne__(self, other: TextNode) -> bool:
         return (
             self.text_type != other.text_type
             or self.text != other.text
             or self.url != other.url
         )
     
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
-        
+    
+def text_node_to_html_node(text_node: TextNode) -> LeafNode:
+    if text_node.text_type == TextType.TEXT:
+        return LeafNode(None, value=text_node.text)
+    elif text_node.text_type == TextType.BOLD:
+        return LeafNode("b", text_node.text)
+    elif text_node.text_type == TextType.ITALIC:
+        return LeafNode("i", text_node.text)
+    elif text_node.text_type == TextType.CODE:
+        return LeafNode("code", text_node.text)
+    elif text_node.text_type == TextType.LINK:
+        return LeafNode("a", text_node.text, {"href": text_node.url})
+    elif text_node.text_type == TextType.IMAGE:
+        return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
+    else:
+        raise Exception(f"invalid text type: {text_node.text_type}")

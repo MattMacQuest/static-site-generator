@@ -1,9 +1,8 @@
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
 from enum import Enum
 
 def main():
-    dummy = TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev")
-    print(dummy)
+    pass
 
 if __name__ == "__main__":
     main()
