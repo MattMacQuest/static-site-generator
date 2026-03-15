@@ -1,5 +1,6 @@
 import unittest
 from textnode import TextNode, TextType, text_node_to_html_node
+from inline_markdown import split_nodes_delimiter
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
@@ -54,6 +55,38 @@ class TestTextNodeToHTMLNode(unittest.TestCase):
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "b")
         self.assertEqual(html_node.value, "This is bold")
+        
+# class TestSplitNodesDelimiter(unittest.TestCase):
+#     def test_code(self):
+#         node = TextNode("This is text with a `code block` word", TextType.TEXT)
+#         new_nodes = split_nodes_delimiter([node], "`", TextType.CODE)
+#         self.assertEqual(new_nodes[0].text, "This is text with a ")
+#         self.assertEqual(new_nodes[0].text_type, TextType.TEXT)
+#         self.assertEqual(new_nodes[1].text, "code block")
+#         self.assertEqual(new_nodes[1].text_type, TextType.CODE)
+#         self.assertEqual(new_nodes[2].text, " word")
+#         self.assertEqual(new_nodes[2].text_type, TextType.TEXT)
+        
+#     def test_bold(self):
+#         node = TextNode("This is text with a **bold** word", TextType.TEXT)
+#         new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
+#         self.assertEqual(new_nodes[0].text, "This is text with a ")
+#         self.assertEqual(new_nodes[0].text_type, TextType.TEXT)
+#         self.assertEqual(new_nodes[1].text, "bold")
+#         self.assertEqual(new_nodes[1].text_type, TextType.BOLD)
+#         self.assertEqual(new_nodes[2].text, " word")
+#         self.assertEqual(new_nodes[2].text_type, TextType.TEXT)
+        
+#     def test_italic(self):
+#         node = TextNode("This is text with an __italic__ word", TextType.TEXT)
+#         new_nodes = split_nodes_delimiter([node], "__", TextType.ITALIC)
+#         self.assertEqual(new_nodes[0].text, "This is text with an ")
+#         self.assertEqual(new_nodes[0].text_type, TextType.TEXT)
+#         self.assertEqual(new_nodes[1].text, "italic")
+#         self.assertEqual(new_nodes[1].text_type, TextType.ITALIC)
+#         self.assertEqual(new_nodes[2].text, " word")
+#         self.assertEqual(new_nodes[2].text_type, TextType.TEXT)
+
 
 if __name__ == "__main__":
     unittest.main()
