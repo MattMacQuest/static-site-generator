@@ -3,3 +3,4 @@ This is a project to create a static site generator. It will convert raw markdow
 
 TODO:
 - Add nested markdown functionality to inline_markdown.py and associated unit tests
+- Documentation pass
