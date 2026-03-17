@@ -186,6 +186,34 @@ class TestInlineMarkdown(unittest.TestCase):
             ],
             new_nodes
         )
+    
+    def test_link_matching(self):
+        node = TextNode(
+            "This is text with a ![link](same link) and a [link](same link)",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with a ![link](same link) and a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "same link")
+            ],
+            new_nodes
+        )
+        
+    def test_image_matching(self):
+        node = TextNode(
+            "This is text with a [link](same link) and a ![link](same link)",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with a [link](same link) and a ", TextType.TEXT),
+                TextNode("link", TextType.IMAGE, "same link")
+            ],
+            new_nodes
+        )
         
     def test_split_image_single(self):
         node = TextNode(

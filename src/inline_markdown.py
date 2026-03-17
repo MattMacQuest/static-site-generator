@@ -87,7 +87,11 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
             continue
         
         for tuple in link_tuples:
-            before, after = node_text.split(f"[{tuple[0]}]({tuple[1]})", 1)
+            # This uses re to avoid a situation where if someone writes something like:
+            # "This is text with a ![link](same link) and a [link](same link)". Using the standard split
+            # method, that would split improperly at the image. This covers that edge case. It is not
+            # necessary for split_nodes_image.
+            before, after = re.split(r"(?<!!)\[" + re.escape(f"{tuple[0]}]({tuple[1]})"), node_text, maxsplit=1)
             if before != "":
                 new_nodes.append(TextNode(before, TextType.TEXT))
             new_nodes.append(TextNode(tuple[0], TextType.LINK, tuple[1]))
