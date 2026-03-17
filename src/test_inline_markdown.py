@@ -5,7 +5,7 @@ from inline_markdown import (
     extract_markdown_images,
     split_nodes_image,
     split_nodes_link,
-    text_to_textnodes
+    text_to_textnodes,
 )
 
 from textnode import TextNode, TextType
@@ -335,3 +335,4 @@ class TestInlineMarkdown(unittest.TestCase):
         text = "This is **text** with an _italic word **and** a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
         
         self.assertRaises(ValueError, text_to_textnodes, text)
+        
