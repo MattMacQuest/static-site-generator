@@ -243,4 +243,42 @@ class TestInlineMarkdown(unittest.TestCase):
         
     # This test will try to split one, then the other
     def test_split_links_then_images(self):
-        pass
+        node = TextNode(
+            "This is text with a [link](https://www.google.com) and an ![image](https://i.imgur.com/zjjcJKZ.png)",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_link([node])
+        new_nodes = split_nodes_image(new_nodes)
+        
+        self.assertListEqual(
+            [
+                TextNode("This is text with a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://www.google.com"),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+            ],
+            new_nodes
+        )
+
+    def test_split_delimiter_and_image(self):
+        node = TextNode(
+            "This is text with a [link](https://www.google.com) and an ![image](https://i.imgur.com/zjjcJKZ.png), and some **bold** text too",
+            TextType.TEXT
+        )
+        
+        new_nodes = split_nodes_delimiter([node], "**", TextType.BOLD)
+        new_nodes = split_nodes_image(new_nodes)
+        new_nodes = split_nodes_link(new_nodes)
+        
+        self.assertListEqual(
+            [
+                TextNode("This is text with a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://www.google.com"),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(", and some ", TextType.TEXT),
+                TextNode("bold", TextType.BOLD),
+                TextNode(" text too", TextType.TEXT)
+            ],
+            new_nodes
+        )
