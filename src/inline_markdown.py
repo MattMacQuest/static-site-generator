@@ -54,13 +54,18 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
         if node.text_type != TextType.TEXT:
             new_nodes.append(node)
             continue
+        
+        # Extracts list of tuples of matched text from the node's text field. In this case matching the
+        # ![alt text](URL) syntax
         image_tuples = extract_markdown_images(node.text)
         node_text = node.text
         
+        # No images found, append the node
         if len(image_tuples) == 0:
             new_nodes.append(node)
             continue
         
+        # Go over each tuple and split the text along the provided string and cuts empty portions
         for tuple in image_tuples:
             before, after = node_text.split(f"![{tuple[0]}]({tuple[1]})", 1)
             if before != "":
@@ -87,10 +92,10 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
             continue
         
         for tuple in link_tuples:
-            # This uses re to avoid a situation where if someone writes something like:
+            # This uses the re module to avoid a situation where if someone writes something like:
             # "This is text with a ![link](same link) and a [link](same link)". Using the standard split
             # method, that would split improperly at the image. This covers that edge case. It is not
-            # necessary for split_nodes_image.
+            # necessary for split_nodes_image as it is not a subset of split_nodes_link.
             before, after = re.split(r"(?<!!)\[" + re.escape(f"{tuple[0]}]({tuple[1]})"), node_text, maxsplit=1)
             if before != "":
                 new_nodes.append(TextNode(before, TextType.TEXT))
@@ -101,7 +106,8 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
             
     return new_nodes
 
-def text_to_textnodes(text: str):
+# Function that simply calls the rest for ease of use
+def text_to_textnodes(text: str) -> list[TextNode]:
     new_nodes = [TextNode(text, TextType.TEXT)]
     new_nodes = split_nodes_delimiter(new_nodes, "**", TextType.BOLD)
     new_nodes = split_nodes_delimiter(new_nodes, "_", TextType.ITALIC)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+# Parent class for Leaf and Parent nodes
 class HTMLNode():
     def __init__(self, tag: str=None, value: str=None, children: HTMLNode=None, props: dict=None):
         self.tag = tag
@@ -7,9 +8,12 @@ class HTMLNode():
         self.children = children
         self.props = props
     
+    # To be implemented by the inheritors
     def to_html(self):
         raise NotImplementedError()
     
+    # Converts the properties of a node object into HTML. For things like
+    # <a href="link"> where 'href="link"' is the prop
     def props_to_html(self) -> str:
         if self.props == None:
             return ""
@@ -39,6 +43,8 @@ class HTMLNode():
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
     
+# Class representing a node with no children. This, combined with the ParentNode class enables nested
+# HTML handling
 class LeafNode(HTMLNode):
     def __init__(self, tag: str, value: str, props: dict=None):
         super(LeafNode, self).__init__()
@@ -46,6 +52,8 @@ class LeafNode(HTMLNode):
         self.value = value
         self.props = props
         
+    # Inheritor implementation of the to_html method. Takes the value of the LeafNode and converts
+    # it into workable HTML
     def to_html(self) -> str:
         if self.value == None:
             raise ValueError("All leaf nodes must have a value")
@@ -56,6 +64,7 @@ class LeafNode(HTMLNode):
     def __repr__(self) -> str:
         return f"HTMLNode({self.tag}, {self.value}, {self.props})"
     
+# Class representing a node with one or more children
 class ParentNode(HTMLNode):
     def __init__(self, tag: str, children: HTMLNode, props: dict=None):
         super(ParentNode, self).__init__()
@@ -63,6 +72,8 @@ class ParentNode(HTMLNode):
         self.children = children
         self.props = props
         
+    # Inheritor implementation of the to_html method. Same as above. 
+    # Does not pretty-print
     def to_html(self) -> str:
         if self.tag is None:
             raise ValueError("Tag missing")
