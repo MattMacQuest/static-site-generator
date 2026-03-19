@@ -66,7 +66,7 @@ class LeafNode(HTMLNode):
     
 # Class representing a node with one or more children
 class ParentNode(HTMLNode):
-    def __init__(self, tag: str, children: HTMLNode, props: dict=None):
+    def __init__(self, tag: str, children: list[ParentNode | LeafNode], props: dict=None):
         super(ParentNode, self).__init__()
         self.tag = tag
         self.children = children
