@@ -208,3 +208,9 @@ __marimo__/
 
 # VSCode config
 .vscode/
+
+# Image files
+*.png
+
+# Generated site assets
+public/
