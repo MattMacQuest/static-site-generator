@@ -37,3 +37,6 @@ def generate_page(from_path: str, template_path: str, dest_path: str):
             f.write(final_html)
     except Exception as e:
                 print(f"Unable to write file {from_path}. Reason: {e}")
+
+def generate_page_recursive(dir_path_content: str, template_path: str, dest_dir_path: str):
+    pass
