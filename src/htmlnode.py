@@ -2,6 +2,8 @@ from __future__ import annotations
 
 # Parent class for Leaf and Parent nodes
 class HTMLNode():
+    """Parent class for containing the HTML objects
+    """
     def __init__(self, tag: str=None, value: str=None, children: HTMLNode=None, props: dict=None):
         self.tag = tag
         self.value = value
@@ -46,6 +48,11 @@ class HTMLNode():
 # Class representing a node with no children. This, combined with the ParentNode class enables nested
 # HTML handling
 class LeafNode(HTMLNode):
+    """Represents an HTML node with no children. Has a tag, a value, and optionally props
+
+    Args:
+        HTMLNode (_type_): Parent class
+    """
     def __init__(self, tag: str, value: str, props: dict=None):
         super(LeafNode, self).__init__()
         self.tag = tag
@@ -66,6 +73,11 @@ class LeafNode(HTMLNode):
     
 # Class representing a node with one or more children
 class ParentNode(HTMLNode):
+    """Represents an HTML node with children. Has a tag, children, and optionally props
+
+    Args:
+        HTMLNode (_type_): Parent class
+    """
     def __init__(self, tag: str, children: list[ParentNode | LeafNode], props: dict=None):
         super(ParentNode, self).__init__()
         self.tag = tag
@@ -75,6 +87,15 @@ class ParentNode(HTMLNode):
     # Inheritor implementation of the to_html method. Same as above. 
     # Does not pretty-print
     def to_html(self) -> str:
+        """Converts the node and its children into workable HTML strings
+
+        Raises:
+            ValueError: In case of no tag
+            ValueError: In case of missing child(ren)
+
+        Returns:
+            str: _description_
+        """
         if self.tag is None:
             raise ValueError("Tag missing")
         if self.children is None:

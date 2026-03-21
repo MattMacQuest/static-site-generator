@@ -2,6 +2,12 @@ import os, shutil
 
 
 def copy_files_recursive(src: str, dst: str):
+    """Recursively copies all files from source directory to a destination directory
+
+    Args:
+        src (str): Source directory
+        dst (str): Destination directory
+    """
     if not os.path.exists(dst):
         os.mkdir(dst)
     
