@@ -3,10 +3,22 @@ import re
 
 # TODO: Integrate nested markdown for things like combo **__bold italics__**
 
-# This inputs a list of TextNodes and breaks each node into a new list of TextNodes, splitting based on
-# the provided delimiter and text type. Ex: inputting [TextNode(This is text with a **bolded** word, TextType.TEXT)]
-# will split into ["This is text with a ", "bolded", " word"]
 def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: TextType) -> list[TextNode]:
+    """This inputs a list of TextNodes and breaks each node into a new list of TextNodes, splitting based on
+ the provided delimiter and text type. Ex: inputting [TextNode(This is text with a **bolded** word, TextType.TEXT)]
+ will split into ["This is text with a ", "bolded", " word"]
+
+    Args:
+        old_nodes (list[TextNode]): List of TextNodes to process
+        delimiter (str): Delimiter to split the node on
+        text_type (TextType): Target text type
+
+    Raises:
+        ValueError: Unclosed markdown tags
+
+    Returns:
+        list[TextNode]: New list of TextNodes with text_type extracted
+    """
     new_nodes = []
     for node in old_nodes:
         if node.text_type != TextType.TEXT:
@@ -35,6 +47,8 @@ def split_nodes_delimiter(old_nodes: list[TextNode], delimiter: str, text_type: 
 # This inputs a string of text and extracts any images that are present in markdown format and returns
 # the combo as a tuple in the form (alt_text, URL)
 def extract_markdown_images(text: str) -> list[tuple]:
+    """Extracts all images using markdown syntax ![alt text](URL). Returns tuple of found (alt text, URL)"""
+    
     # Image syntax: ![alt text](URL)
     pattern = r"!\[([^\[\]]*)\]\(([^\(\)]*)\)"
     return re.findall(pattern, text)
@@ -42,6 +56,8 @@ def extract_markdown_images(text: str) -> list[tuple]:
 # This inputs a string of text and extracts any links that are present in markdown format and returns
 # the combo as a tuple in the form (link_text, URL)
 def extract_markdown_links(text: str) -> list[tuple]:
+    """Extracts all links using markdown syntax [link text](URL). Returns tuple of found (link text, URL)"""
+
     # Link syntax: [link text](URL)
     pattern = r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)"
     return re.findall(pattern, text)
@@ -49,6 +65,14 @@ def extract_markdown_links(text: str) -> list[tuple]:
 # The following functions do the same as split_nodes_delimiter but with links and images instead of 
 # TextTypes
 def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
+    """Splits list of text nodes on images found using markdown syntax
+
+    Args:
+        old_nodes (list[TextNode]): Old list of text nodes
+
+    Returns:
+        list[TextNode]: New list of text nodes with image information split into their own nodes
+    """
     new_nodes: list[TextNode] = []
     for node in old_nodes:
         if node.text_type != TextType.TEXT:
@@ -79,6 +103,14 @@ def split_nodes_image(old_nodes: list[TextNode]) -> list[TextNode]:
         
 
 def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
+    """Splits list of text nodes on links found using markdown syntax
+
+    Args:
+        old_nodes (list[TextNode]): Old list of text nodes
+
+    Returns:
+        list[TextNode]: New list of text nodes with link information split into their own nodes
+    """
     new_nodes: list[TextNode] = []
     for node in old_nodes:
         if node.text_type != TextType.TEXT:
@@ -108,6 +140,7 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
 
 # Function that simply calls the rest for ease of use
 def text_to_textnodes(text: str) -> list[TextNode]:
+    """Converts provided text into a list of text nodes"""
     new_nodes = [TextNode(text, TextType.TEXT)]
     new_nodes = split_nodes_delimiter(new_nodes, "**", TextType.BOLD)
     new_nodes = split_nodes_delimiter(new_nodes, "_", TextType.ITALIC)

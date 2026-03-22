@@ -2,6 +2,17 @@ import os
 from markdown_blocks import markdown_to_html_node
 
 def extract_title(markdown: str) -> str:
+    """Inputs the markdown document and finds the first top-level header
+
+    Args:
+        markdown (str): Markdown document in string form
+
+    Raises:
+        ValueError: If no '# ' header found, no title is present
+
+    Returns:
+        str: extracted title
+    """
     lines = markdown.split("\n")
     for line in lines:
         if line.startswith("# "):

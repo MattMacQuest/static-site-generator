@@ -62,6 +62,14 @@ class LeafNode(HTMLNode):
     # Inheritor implementation of the to_html method. Takes the value of the LeafNode and converts
     # it into workable HTML
     def to_html(self) -> str:
+        """converts the node to usable HTML string
+
+        Raises:
+            ValueError: Missing value field
+
+        Returns:
+            str: HTML string
+        """
         if self.value == None:
             raise ValueError("All leaf nodes must have a value")
         if self.tag == None:
@@ -94,7 +102,7 @@ class ParentNode(HTMLNode):
             ValueError: In case of missing child(ren)
 
         Returns:
-            str: _description_
+            str: HTML string
         """
         if self.tag is None:
             raise ValueError("Tag missing")
