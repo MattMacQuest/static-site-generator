@@ -211,5 +211,6 @@ __marimo__/
 
 # Image files
 *.png
+!static/images/*.png
 
 # Generated site assets
