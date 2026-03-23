@@ -21,7 +21,7 @@ def extract_title(markdown: str) -> str:
     raise ValueError("no title found")
         
 # Generates the page HTML using the provided 
-def generate_page(from_path: str, template_path: str, dest_path: str):
+def generate_page(from_path: str, template_path: str, dest_path: str, basepath='/'):
     """Reads contents of a markdown file and processess them into HTML code
 
     Args:
@@ -46,6 +46,7 @@ def generate_page(from_path: str, template_path: str, dest_path: str):
     title = extract_title(md)
     
     final_html = template.replace("{{ Title }}", title).replace("{{ Content }}", html_string)
+    final_html = final_html.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
     
     dest_dir_path = os.path.dirname(dest_path)
     if dest_dir_path != "":
@@ -58,7 +59,7 @@ def generate_page(from_path: str, template_path: str, dest_path: str):
                 print(f"Unable to write file {from_path}. Reason: {e}")
 
 # dest_dir_path should start as "./public/" and dir_path_content should start as "./content"
-def generate_page_recursive(dir_path_content: str, template_path: str, dest_dir_path: str):
+def generate_page_recursive(dir_path_content: str, template_path: str, dest_dir_path: str, basepath='/'):
     """Recursively processess all markdown files in a directory, and processess them into HTML code
 
     Args:
@@ -75,8 +76,8 @@ def generate_page_recursive(dir_path_content: str, template_path: str, dest_dir_
         dest_path = os.path.join(dest_dir_path, entry)
         if os.path.isfile(from_path):
             dest_path = Path(dest_path).with_suffix(".html")
-            generate_page(from_path, template_path, dest_path)           
+            generate_page(from_path, template_path, dest_path,basepath)           
         
         else:
             # Found a directory, so we need to go deeper
-            generate_page_recursive(from_path, template_path, dest_path)
+            generate_page_recursive(from_path, template_path, dest_path, basepath)
