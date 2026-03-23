@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from markdown_blocks import markdown_to_html_node
 
 def extract_title(markdown: str) -> str:
@@ -56,6 +57,7 @@ def generate_page(from_path: str, template_path: str, dest_path: str):
     except Exception as e:
                 print(f"Unable to write file {from_path}. Reason: {e}")
 
+# dest_dir_path should start as "./public/" and dir_path_content should start as "./content"
 def generate_page_recursive(dir_path_content: str, template_path: str, dest_dir_path: str):
     """Recursively processess all markdown files in a directory, and processess them into HTML code
 
@@ -64,4 +66,17 @@ def generate_page_recursive(dir_path_content: str, template_path: str, dest_dir_
         template_path (str): HTML template file
         dest_dir_path (str): Directory target
     """
-    pass
+    
+    if not os.path.exists(dest_dir_path):
+        os.mkdir(dest_dir_path)
+    
+    for entry in os.listdir(dir_path_content):
+        from_path = os.path.join(dir_path_content, entry)
+        dest_path = os.path.join(dest_dir_path, entry)
+        if os.path.isfile(from_path):
+            dest_path = Path(dest_path).with_suffix(".html")
+            generate_page(from_path, template_path, dest_path)           
+        
+        else:
+            # Found a directory, so we need to go deeper
+            generate_page_recursive(from_path, template_path, dest_path)
